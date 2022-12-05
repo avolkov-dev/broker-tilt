@@ -1,0 +1,17 @@
+version: "3.5"
+services:
+  mongodb:
+    ports:
+      - "27017:27017"
+    image: "mongo:4.4"
+#    environment:
+#      MONGO_INITDB_ROOT_USERNAME: "admin"
+#      MONGO_INITDB_ROOT_PASSWORD: "admin"
+  localstack:
+    ports:
+      - "4566:4566"
+      - "4571:4571"
+    image: "localstack/localstack"
+    environment:
+      SERVICES: "sqs"
+      REGION: "us-east-1"

@@ -1,0 +1,31 @@
+basePath = '../../'
+token=os.environ.get('VERDACCIO_FORTO_IO_TOKEN', '')
+port = 8651;
+serviceName = 'contract-management'
+servicePath =  os.path.abspath(basePath + serviceName)
+
+if not os.path.exists(servicePath):
+  fail('Please "git clone" the repo in ' + servicePath)
+
+localConfigPath = servicePath +  '/src/config/config.local.yaml'
+if not os.path.exists(localConfigPath):
+  fail('Please "git clone" the repo in ' + localConfigPath)
+  
+local_resource(serviceName, 
+  serve_cmd='cp ./src/config/config.base.yaml ./dist/src/config/ && cp ./src/config/config.local.yaml ./dist/src/config/ && yarn start:dev', 
+  serve_dir=servicePath, 
+  links=['http://localhost:'+ str(port) ],  
+  readiness_probe=probe(
+      period_secs=15,
+      tcp_socket=tcp_socket_action(port=port)
+  ),
+  #TODO add ability to easily switch between local dev/sandbox
+  serve_env={
+      "HTTP_PORT": str(port),
+      "LOGGING_IS_JSON_LOGGING": 'false',
+      "HTTP_AUTH_TOKEN": 'false',
+      "HTTP_CORS_ORIGIN_URLS": '*',
+      "HOST": 'localhost',
+      "AUTH_IS": 'localhost',
+  }
+)

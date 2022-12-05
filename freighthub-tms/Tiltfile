@@ -1,0 +1,24 @@
+basePath = '../../'
+serviceName = 'freighthub-tms'
+servicePath =  os.path.abspath(basePath + serviceName)
+port = 3000
+
+if not os.path.exists(servicePath):
+  fail('Please "git clone" the repo in ' + servicePath)
+#todo run recreate-env as part of this script
+if not os.path.exists(servicePath + "/.env"):
+  fail('Please run recreate-env.sh to fill .env file in ' + servicePath)
+
+local_resource(serviceName, 
+  serve_cmd='sh '+ servicePath +'/scripts/start-dev', 
+  serve_dir=servicePath, 
+  links=['http://localhost:'+ str(port) ],  
+  readiness_probe=probe(
+      period_secs=15,
+      tcp_socket=tcp_socket_action(port=port)
+  ),
+  #TODO fill env
+  serve_env={
+    "CONTRACT_MANAGEMENT_ENDPOINT": "http://localhost:8651",
+  }
+)
