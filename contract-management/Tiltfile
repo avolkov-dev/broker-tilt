@@ -1,6 +1,6 @@
 basePath = '../../'
 token=os.environ.get('VERDACCIO_FORTO_IO_TOKEN', '')
-port = 8651;
+port = 8650;
 serviceName = 'contract-management'
 servicePath =  os.path.abspath(basePath + serviceName)
 
@@ -16,7 +16,7 @@ local_resource(serviceName,
   serve_dir=servicePath, 
   links=['http://localhost:'+ str(port) ],  
   readiness_probe=probe(
-      period_secs=15,
+      period_secs=3,
       tcp_socket=tcp_socket_action(port=port)
   ),
   #TODO add ability to easily switch between local dev/sandbox

@@ -14,11 +14,11 @@ local_resource(serviceName,
   serve_dir=servicePath, 
   links=['http://localhost:'+ str(port) ],  
   readiness_probe=probe(
-      period_secs=15,
+      period_secs=3,
       tcp_socket=tcp_socket_action(port=port)
   ),
   #TODO fill env
   serve_env={
-    "CONTRACT_MANAGEMENT_ENDPOINT": "http://localhost:8651",
+    "CONTRACT_MANAGEMENT_ENDPOINT": "http://localhost:8650",
   }
-)
+) 
